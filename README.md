@@ -6,5 +6,7 @@ To generate your business card please follow the steps:
 4. Access your final site in 'rendered_site.html'
 
    ![Website view](screenshot)
+   ![Website view no. 2](screenshot2)
+   
    
 Questions: Send an email to mateuszmputo@gmail.com
