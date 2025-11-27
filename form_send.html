@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalCard Setup - Data Input</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        input[type="file"]::file-selector-button {
+            /* Tailwind classes for the file input button */
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: background-color 150ms ease-in-out;
+            cursor: pointer;
+            border: none;
+        }
+        input[type="file"]:hover::file-selector-button {
+            background-color: #4338ca;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white shadow-2xl rounded-xl p-6 md:p-10 border border-gray-100">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Setup Your Digital Card</h1>
+            <p class="text-gray-500">Enter your business details below. All fields will be exported as a single JSON payload.</p>
+        </header>
+
+        <form id="cardSetupForm" onsubmit="event.preventDefault(); collectAndSendRequest();" class="space-y-8">
+            
+            <fieldset class="border-t border-gray-200 pt-6 space-y-6">
+                <legend class="text-2xl font-semibold text-indigo-700 mb-6">1. Identity & Branding</legend>
+                
+                <div>
+                    <label for="subdomain" class="block text-sm font-medium text-gray-700 mb-1">Unique Card Address (Subdomain)</label>
+                    <div class="mt-1 flex rounded-lg shadow-sm">
+                        <input type="text" id="subdomain" name="subdomain" required placeholder="yourbusinessname" class="flex-1 block w-full rounded-l-lg border-gray-300 p-3 focus:ring-indigo-500 focus:border-indigo-500 min-w-0">
+                        <span class="inline-flex items-center px-4 rounded-r-lg border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                            .bus-card.com
+                        </span>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="business_name" class="block text-sm font-medium text-gray-700 mb-1">Business Name</label>
+                        <input type="text" id="business_name" name="business_name" required placeholder="Elite Hair Studio" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="tagline_short" class="block text-sm font-medium text-gray-700 mb-1">Short Tagline (For Headers)</label>
+                        <input type="text" id="tagline_short" name="tagline_short" required placeholder="Elite Hair Studio" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="tagline" class="block text-sm font-medium text-gray-700 mb-1">Main Tagline/Description</label>
+                    <textarea id="tagline" name="tagline" rows="2" required placeholder="The best cuts and color in Metropolis, booked instantly." class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                </div>
+            </fieldset>
+
+            <fieldset class="border-t border-gray-200 pt-6 space-y-6">
+                <legend class="text-2xl font-semibold text-indigo-700 mb-6">2. Calls to Action</legend>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="cta_primary" class="block text-sm font-medium text-gray-700 mb-1">Primary CTA Button Text</label>
+                        <input type="text" id="cta_primary" name="cta_primary" required placeholder="Book Your Appointment Now" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="cta_secondary" class="block text-sm font-medium text-gray-700 mb-1">Secondary CTA Button Text</label>
+                        <input type="text" id="cta_secondary" name="cta_secondary" required placeholder="Call to Check Availability" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="border-t border-gray-200 pt-6 space-y-6">
+                <legend class="text-2xl font-semibold text-indigo-700 mb-6">3. Services & Pricing</legend>
+                
+                <h3 class="text-xl font-medium text-gray-700">Services Offered</h3>
+                <div id="services-container" class="space-y-4">
+                    </div>
+                <button type="button" onclick="addServiceRow()" class="flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 transition">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    Add Service
+                </button>
+                <hr class="my-6">
+
+                <h3 class="text-xl font-medium text-gray-700">Price Items</h3>
+                <div id="prices-container" class="space-y-4">
+                    </div>
+                <button type="button" onclick="addPriceRow()" class="flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 transition">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    Add Price Item
+                </button>
+                
+                <div class="pt-4">
+                    <label for="pricing_note" class="block text-sm font-medium text-gray-700 mb-1">Pricing Note/Disclaimer</label>
+                    <input type="text" id="pricing_note" name="pricing_note" placeholder="*Prices may vary. Contact us for a quote." class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            </fieldset>
+
+            <fieldset class="border-t border-gray-200 pt-6 space-y-6">
+                <legend class="text-2xl font-semibold text-indigo-700 mb-6">4. Contact & Location</legend>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="phone_raw" class="block text-sm font-medium text-gray-700 mb-1">Phone (Raw/Click-to-Call)</label>
+                        <input type="tel" id="phone_raw" name="phone_raw" required placeholder="5551234567" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="phone_formatted" class="block text-sm font-medium text-gray-700 mb-1">Phone (Display Format)</label>
+                        <input type="text" id="phone_formatted" name="phone_formatted" required placeholder="(555) 123-4567" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="book@elitehair.com" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="address_line_1" class="block text-sm font-medium text-gray-700 mb-1">Address Line 1</label>
+                        <input type="text" id="address_line_1" name="address_line_1" required placeholder="456 Commerce Drive, Suite 101" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="address_line_2" class="block text-sm font-medium text-gray-700 mb-1">Address Line 2 (City, Zip, State)</label>
+                        <input type="text" id="address_line_2" name="address_line_2" required placeholder="Metropolis, CA 90210" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="map_embed_url" class="block text-sm font-medium text-gray-700 mb-1">Google Maps Embed URL (iFrame link)</label>
+                    <input type="url" id="map_embed_url" name="map_embed_url" placeholder="https://www.google.com/maps/embed?..." class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                
+                <h3 class="text-xl font-medium text-gray-700 pt-4">Hours of Operation</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="hours_weekday" class="block text-sm font-medium text-gray-700 mb-1">Mon - Fri</label>
+                        <input type="text" id="hours_weekday" name="hours_weekday" required placeholder="9:00 AM – 5:00 PM" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="hours_saturday" class="block text-sm font-medium text-gray-700 mb-1">Saturday</label>
+                        <input type="text" id="hours_saturday" name="hours_saturday" required placeholder="9:00 AM – 5:00 PM" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="hours_sunday" class="block text-sm font-medium text-gray-700 mb-1">Sunday</label>
+                        <input type="text" id="hours_sunday" name="hours_sunday" required placeholder="Closed" class="w-full border-gray-300 rounded-lg shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="border-t border-gray-200 pt-6 space-y-6">
+                <legend class="text-2xl font-semibold text-indigo-700 mb-6">5. Photos & Gallery</legend>
+
+                <h3 class="text-xl font-medium text-gray-700 pt-4">Gallery Images (Up to 5)</h3>
+                <div id="gallery-container" class="space-y-4">
+                    </div>
+                <button type="button" onclick="addGalleryRow()" class="flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 transition">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Add Gallery Photo
+                </button>
+            </fieldset>
+            
+            <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-300 ease-in-out">
+                Submit Data to API
+            </button>
+        </form>
+
+        <div id="output" class="mt-10 p-6 bg-gray-50 border border-gray-200 rounded-lg hidden">
+            <h3 id="output-title" class="text-xl font-semibold mb-3">API Response:</h3>
+            <pre id="json-output" class="whitespace-pre-wrap break-words text-sm bg-white p-4 rounded-lg border border-dashed border-gray-300"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add initial rows on load
+            addServiceRow(true); 
+            addPriceRow(true);
+            addGalleryRow(true);
+        });
+
+        // --- DYNAMIC ROW FUNCTIONS ---
+        // Helper function to create the delete button
+        function createDeleteButton(targetContainer) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'absolute top-0 right-0 m-2 p-1 text-red-500 hover:text-red-700 transition';
+            btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>';
+            btn.onclick = () => targetContainer.remove();
+            return btn;
+        }
+        
+        // SERVICES ROW
+        let serviceCounter = 0;
+        function addServiceRow(isInitial = false) {
+            const container = document.getElementById('services-container');
+            serviceCounter++;
+            const newDiv = document.createElement('div');
+            newDiv.className = 'relative p-4 border border-indigo-200 bg-indigo-50 rounded-lg grid md:grid-cols-3 gap-4';
+            newDiv.innerHTML = `
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Service Name</label>
+                    <input type="text" name="service_name_${serviceCounter}" placeholder="${isInitial ? 'Hairdressing' : 'New Service'}" class="w-full border-gray-300 rounded-lg shadow-sm p-3 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Icon Code (Emoji/Unicode)</label>
+                    <input type="text" name="service_icon_${serviceCounter}" placeholder="${isInitial ? '✂️' : '✨'}" class="w-full border-gray-300 rounded-lg shadow-sm p-3 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            `;
+            if (!isInitial) { newDiv.appendChild(createDeleteButton(newDiv)); }
+            container.appendChild(newDiv);
+        }
+
+        // PRICE ROW
+        let priceCounter = 0;
+        function addPriceRow(isInitial = false) {
+            const container = document.getElementById('prices-container');
+            priceCounter++;
+            const newDiv = document.createElement('div');
+            newDiv.className = 'relative p-4 border border-purple-200 bg-purple-50 rounded-lg grid md:grid-cols-2 gap-4';
+            newDiv.innerHTML = `
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Service Item Name</label>
+                    <input type="text" name="price_service_name_${priceCounter}" placeholder="${isInitial ? 'Standard Rate' : 'Advanced Cut'}" class="w-full border-gray-300 rounded-lg shadow-sm p-3 text-sm focus:ring-purple-500 focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Price/Rate</label>
+                    <input type="text" name="price_value_${priceCounter}" placeholder="${isInitial ? '$100' : '$150 - $200'}" class="w-full border-gray-300 rounded-lg shadow-sm p-3 text-sm focus:ring-purple-500 focus:border-purple-500">
+                </div>
+            `;
+            if (!isInitial) { newDiv.appendChild(createDeleteButton(newDiv)); }
+            container.appendChild(newDiv);
+        }
+
+        // GALLERY ROW
+        let galleryCounter = 0;
+        function addGalleryRow(isInitial = false) {
+            const container = document.getElementById('gallery-container');
+            galleryCounter++;
+            const newDiv = document.createElement('div');
+            newDiv.className = 'relative p-4 border border-green-200 bg-green-50 rounded-lg space-y-3';
+            newDiv.innerHTML = `
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-2">Gallery Photo ${galleryCounter} (File Upload)</label>
+                    <input type="file" name="gallery_file_${galleryCounter}" accept="image/*" class="w-full">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Alt Text / Caption</label>
+                    <input type="text" name="gallery_alt_${galleryCounter}" placeholder="${isInitial ? 'Style A - Before/After' : 'New Client Photo'}" class="w-full border-gray-300 rounded-lg shadow-sm p-3 text-sm focus:ring-green-500 focus:border-green-500">
+                </div>
+            `;
+            if (!isInitial) { newDiv.appendChild(createDeleteButton(newDiv)); }
+            container.appendChild(newDiv);
+        }
+
+        // --- DATA COLLECTION AND API SUBMISSION ---
+        async function collectAndSendRequest() {
+            const API_ENDPOINT = 'http://localhost:8000/submit/';
+            const form = document.getElementById('cardSetupForm');
+            const formData = new FormData(form);
+            
+            // --- Collect all single fields using form.elements for reliability ---
+            // If the element exists, get its value; otherwise, use an empty string.
+            const getVal = (name) => form.elements[name] ? form.elements[name].value : '';
+
+            const subdomain = getVal('subdomain');
+            const business_name = getVal('business_name');
+            const tagline = getVal('tagline');
+            const tagline_short = getVal('tagline_short');
+            const cta_primary = getVal('cta_primary');
+            const cta_secondary = getVal('cta_secondary');
+            const pricing_note = getVal('pricing_note');
+            
+            const hours_weekday = getVal('hours_weekday');
+            const hours_saturday = getVal('hours_saturday');
+            const hours_sunday = getVal('hours_sunday');
+            
+            const phone_raw = getVal('phone_raw');
+            const phone_formatted = getVal('phone_formatted');
+            const email = getVal('email');
+            const address_line_1 = getVal('address_line_1');
+            const address_line_2 = getVal('address_line_2');
+            const map_embed_url = getVal('map_embed_url');
+
+            // --- Structure the final JSON payload ---
+            const finalPayload = {
+                domain: subdomain,
+                business: {
+                    name: business_name,
+                    tagline: tagline,
+                    tagline_short: tagline_short,
+                    cta_primary: cta_primary,
+                    cta_secondary: cta_secondary,
+                    startup_name: "DigitalCard Co." 
+                },
+                section_headings: {
+                    services: "Our Signature Services", 
+                    gallery: "Gallery",
+                    pricing: "Current Price List",
+                    contact: "Location & Booking"
+                },
+                services: [],
+                gallery_images: [],
+                prices: [],
+                
+                pricing_note: pricing_note,
+                
+                hours_of_operation: {
+                    "Mon - Fri": hours_weekday,
+                    "Saturday": hours_saturday,
+                    "Sunday": hours_sunday
+                },
+                
+                contact: {
+                    phone_raw: phone_raw,
+                    phone_formatted: phone_formatted,
+                    email: email,
+                    address_line_1: address_line_1,
+                    address_line_2: address_line_2,
+                    map_url: `https://maps.google.com/?q=$$${encodeURIComponent(address_line_1 + ', ' + address_line_2)}`, 
+                    map_embed_url: map_embed_url,
+                }
+            };
+            
+            // Collect Dynamic Fields (Services)
+            for (let i = 1; i <= serviceCounter; i++) {
+                const name = formData.get(`service_name_${i}`);
+                const icon = formData.get(`service_icon_${i}`);
+                if (name && name.trim()) { 
+                    finalPayload.services.push({ name: name, icon_code: icon || '' });
+                }
+            }
+
+            // Collect Dynamic Fields (Prices)
+            for (let i = 1; i <= priceCounter; i++) {
+                const service_name = formData.get(`price_service_name_${i}`);
+                const price_value = formData.get(`price_value_${i}`);
+                if (service_name && service_name.trim()) {
+                    finalPayload.prices.push({ service_name: service_name, price: price_value || '' });
+                }
+            }
+            
+            // Collect Dynamic Fields (Gallery - Placeholder URL only)
+            for (let i = 1; i <= galleryCounter; i++) {
+                const file = formData.get(`gallery_file_${i}`);
+                const alt = formData.get(`gallery_alt_${i}`);
+                
+                // Only include the image if a file was selected or alt text was provided
+                if ((file && (file.size > 0 || file.name)) || (alt && alt.trim())) { 
+                    const altText = alt || (file ? file.name : `Image ${i}`);
+                    finalPayload.gallery_images.push({ url: altText, alt: altText, alt_fallback: altText });
+                }
+            }
+
+            // --- API Submission using Fetch ---
+            const jsonOutput = document.getElementById('json-output');
+            const outputDiv = document.getElementById('output');
+            const outputTitle = document.getElementById('output-title');
+
+            // Show loading state
+            outputDiv.classList.remove('hidden');
+            outputTitle.textContent = "Sending Request...";
+            jsonOutput.textContent = "Please wait...";
+            outputTitle.classList.remove('text-green-700', 'text-red-700');
+            outputTitle.classList.add('text-gray-600');
+            
+            try {
+                // Log payload for debugging before sending
+                console.log("Payload sent to API:", finalPayload);
+                
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify(finalPayload)
+                });
+                
+                const responseData = await response.json();
+
+                if (response.ok) {
+                    outputTitle.textContent = "Success: Data Sent to API";
+                    outputTitle.classList.add('text-green-700');
+                    jsonOutput.textContent = JSON.stringify(responseData, null, 2);
+                } else {
+                    outputTitle.textContent = `Error: API Request Failed (Status: ${response.status})`;
+                    outputTitle.classList.add('text-red-700');
+                    jsonOutput.textContent = JSON.stringify(responseData, null, 2);
+                }
+
+            } catch (error) {
+                outputTitle.textContent = "Network Error: Failed to Fetch";
+                outputTitle.classList.add('text-red-700');
+                jsonOutput.textContent = `Could not connect to the backend server at ${API_ENDPOINT}. Please check if the FastAPI service is running and CORS is properly configured. Error Details: ${error.message}`;
+            }
+            
+            outputDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

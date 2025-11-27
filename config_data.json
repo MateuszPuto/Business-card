@@ -1,0 +1,77 @@
+{
+  "subdomain": "nycoffeeshop",
+  "business": {
+    "name": "New York Coffee",
+    "tagline": "Likely the best coffee in the city",
+    "tagline_short": "NY caff",
+    "cta_primary": "Visit us now",
+    "cta_secondary": "Call",
+    "startup_name": "Business Card"
+  },
+  "section_headings": {
+    "services": "Our Signature Services",
+    "gallery": "Gallery",
+    "pricing": "Current Price List",
+    "contact": "Location & Booking"
+  },
+  "services": [
+    {
+      "name": "Roasted beans",
+      "icon_code": "🫘"
+    },
+    {
+      "name": "Coffee in the cup ",
+      "icon_code": "☕"
+    },
+    {
+      "name": "Coffee to go",
+      "icon_code": ""
+    }
+  ],
+  "prices": [
+    {
+      "service_name": "Espresso",
+      "price": "$4"
+    },
+    {
+      "service_name": "Cappucino",
+      "price": "$8"
+    },
+    {
+      "service_name": "Black coffee",
+      "price": "$10"
+    },
+    {
+      "service_name": "Frappucinno",
+      "price": "$10"
+    }
+  ],
+  "gallery_images": [
+    {
+      "url": "[PLACEHOLDER_URL_FOR_coffees.jpg]",
+      "alt": "coffees.jpg"
+    },
+    {
+      "url": "[PLACEHOLDER_URL_FOR_coffee2.jpg]",
+      "alt": "coffee2.jpg"
+    },
+    {
+      "url": "[PLACEHOLDER_URL_FOR_coffee.jpg]",
+      "alt": "coffee.jpg"
+    }
+  ],
+  "pricing_note": "Prices may change",
+  "hours_of_operation": {
+    "Mon - Fri": "9:00 AM - 5:00 PM",
+    "Saturday": "9:00 AM - 5:00 PM",
+    "Sunday": "Closed"
+  },
+  "contact": {
+    "phone_raw": "555555555",
+    "phone_formatted": "555 555 555",
+    "email": "nycoffeeshop@mail.com",
+    "address_line_1": "Blensington Avenue",
+    "address_line_2": "New York",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4435.9676212064105!2d-73.94062413901233!3d40.67628001178356!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNowy%20Jork%2C%20Stany%20Zjednoczone!5e0!3m2!1spl!2spl!4v1764254865478!5m2!1spl!2spl"
+  }
+}
