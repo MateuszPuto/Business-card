@@ -5,6 +5,6 @@ To generate your business card please follow the steps:
 3. run "python djang.py" in your terminal
 4. Access your final site in 'rendered_site.html'
 
-   ![Website view](Screenshot from 2025-11-27 16-04-16.png)
+   ![Website view](screenshot.jpg)
    
 Questions: Send an email to mateuszmputo@gmail.com
