@@ -1,8 +1,8 @@
 To generate your business card please follow the steps:
 
-    Open the 'form.html' in your browser and input all your comapany's data
-    Copy the resutling JSON into 'config_data.json'
-    run "python djang.py" in your terminal
-    Access your final site in 'rendered_site.html'
+    1. Open the 'form.html' in your browser and input all your comapany's data
+    2. Copy the resutling JSON into 'config_data.json'
+    3. run "python djang.py" in your terminal
+    4. Access your final site in 'rendered_site.html'
 
 Questions: Send an email to mateuszmputo@gmail.com
